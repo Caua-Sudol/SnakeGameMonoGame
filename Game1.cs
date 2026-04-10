@@ -17,7 +17,7 @@ public class Game1 : Game
     private Queue<Rectangle> snake = new Queue<Rectangle>();
     
     private Rectangle tail;
-    private Rectangle rec;
+    private Rectangle head;
     private Rectangle rat;
 
     private Random random = new Random();
@@ -28,10 +28,13 @@ public class Game1 : Game
     private int width = 800;
     private int height = 480;
 
-    private int widthSnake = 20;
-    private int heightSnake = 20;
+    private int widthSnake = 15;
+    private int heightSnake = 15;
     private int widthRat = 10;
     private int heightRat = 10;
+
+    private double countTime = 0;
+    private double fps = 220;
     
     private KeyboardState inputKey;
 
@@ -74,15 +77,17 @@ public class Game1 : Game
         xR = random.Next(0, width);
         yR = random.Next(0, height);
 
-        rec = new Rectangle(x, y, widthSnake, heightSnake);
+        head = new Rectangle(x, y, widthSnake, heightSnake);
         rat = new Rectangle(xR, yR, widthRat, heightRat);
         
         for(int i = 0; i < 3; i++)
         {
-            x += 20;
-            rec.X = x;
-            snake.Enqueue(rec);
+            x += 1;
+            head.X = x;
+            snake.Enqueue(head);
         }
+
+        x = 100;
         
         tail = snake.Peek();
 
@@ -92,8 +97,6 @@ public class Game1 : Game
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-
-        TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 5.0);
 
         // Map Keys
         
@@ -122,30 +125,45 @@ public class Game1 : Game
 
         if(currentDirection == Direction.Up)
         {
-          y -= 20;
-          rec.Y = y;        
+          y -= 1;
+          head.Y = y;        
         }
         if(currentDirection == Direction.Down)
         {
-              y += 20;
-              rec.Y = y;
+            y += 1;
+            head.Y = y;
         }
         if(currentDirection == Direction.Right)
         {
-              x += 20;
-              rec.X = x;
+            x += 1;
+            head.X = x;
         }
         if(currentDirection == Direction.Left)
         {
-              x -= 20;
-              rec.X = x;
+            x -= 1;
+            head.X = x;
         }
 
         //
        
-        snake.Enqueue(rec);
-        snake.Dequeue();
+        countTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+        if(countTime >= fps)
+        {
+          snake.Enqueue(head);
+          snake.Dequeue();
+          countTime = 0;
+        }
+
+        if(head.Intersects(rat))
+        {
+          xR = random.Next(0, width);
+          yR = random.Next(0, height);
+
+          rat.X = xR;
+          rat.Y = yR;
+        }
         
+
         base.Update(gameTime);
     }
 
