@@ -87,8 +87,6 @@ public class Game1 : Game
             snake.Enqueue(head);
         }
 
-        x = 100;
-        
         tail = snake.Peek();
 
     }
