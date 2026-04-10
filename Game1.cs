@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -15,6 +16,8 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private Texture2D texture2D;
     private Queue<Rectangle> snake = new Queue<Rectangle>();
+
+    private bool isDead = false;
     
     private Rectangle tail;
     private Rectangle head;
@@ -28,8 +31,8 @@ public class Game1 : Game
     private int width = 800;
     private int height = 480;
 
-    private int widthSnake = 15;
-    private int heightSnake = 15;
+    private int widthSnake = 20;
+    private int heightSnake = 20;
     private int widthRat = 10;
     private int heightRat = 10;
 
@@ -82,7 +85,7 @@ public class Game1 : Game
         
         for(int i = 0; i < 3; i++)
         {
-            x += 1;
+            x += 20;
             head.X = x;
             snake.Enqueue(head);
         }
@@ -95,6 +98,24 @@ public class Game1 : Game
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
+
+        if(isDead == true)
+        {
+          Exit();
+        }
+
+        if(head.X <= width && head.X >= 0 && head.Y <= height && head.Y >= 0)
+        {
+          foreach(var row in snake.SkipLast(1))
+          {
+            if(head.Intersects(row)){
+              isDead = true;
+            }
+          }
+        }else
+        {
+          isDead = true;
+        }
 
         // Map Keys
         
@@ -117,58 +138,48 @@ public class Game1 : Game
           currentDirection = Direction.Left;
         }
 
-        //
+        // Fim do Map
         
-        // Atualização de movimento
-
-        if(currentDirection == Direction.Up)
-        {
-          y -= 1;
-          head.Y = y;        
-        }
-        if(currentDirection == Direction.Down)
-        {
-            y += 1;
-            head.Y = y;
-        }
-        if(currentDirection == Direction.Right)
-        {
-            x += 1;
-            head.X = x;
-        }
-        if(currentDirection == Direction.Left)
-        {
-            x -= 1;
-            head.X = x;
-        }
-
-        //
-       
         countTime += gameTime.ElapsedGameTime.TotalMilliseconds;
         if(countTime >= fps)
         {
           snake.Enqueue(head);
           snake.Dequeue();
           countTime = 0;
+
+          // Atualização de movimento
+          if(currentDirection == Direction.Up)
+          {
+            y -= 20;
+            head.Y = y;        
+          }
+          if(currentDirection == Direction.Down)
+          {
+            y += 20;
+            head.Y = y;
+          }
+          if(currentDirection == Direction.Right)
+          {
+            x += 20;
+            head.X = x;
+          }
+          if(currentDirection == Direction.Left)
+          {
+            x -= 20;
+            head.X = x;
+          }
+          // Fim da Atualização
+          if(head.Intersects(rat))
+          {
+            xR = random.Next(0, width);
+            yR = random.Next(0, height);
+
+            rat.X = xR;
+            rat.Y = yR;
+
+            snake.Enqueue(head);
+          }
         }
-
-        if(head.Intersects(rat))
-        {
-          xR = random.Next(0, width);
-          yR = random.Next(0, height);
-
-          rat.X = xR;
-          rat.Y = yR;
-
-          x += 1;
-          y += 1;
-          head.X = x;
-          head.Y = y;
-
-          snake.Enqueue(head);
-
-        }
-        
 
         base.Update(gameTime);
     }
