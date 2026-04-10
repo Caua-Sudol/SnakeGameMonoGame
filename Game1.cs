@@ -17,8 +17,19 @@ public class Game1 : Game
     private Queue<Rectangle> snake = new Queue<Rectangle>();
     private Rectangle tail;
     private Rectangle rec;
-    private int x, y = 0;
+    private int x, y = 100;
     private int width, height = 0;
+    private KeyboardState inputKey;
+
+    public enum Direction
+    {
+      Up,
+      Down,
+      Left,
+      Right
+    }
+
+    private Direction currentDirection = Direction.Right;
 
     public Game1()
     {
@@ -49,9 +60,7 @@ public class Game1 : Game
         for(int i = 0; i < 3; i++)
         {
             x += 20;
-            Console.WriteLine($"X: {x}");
             rec.X = x;
-            Console.WriteLine(rec);
             snake.Enqueue(rec);
         }
         
@@ -66,11 +75,51 @@ public class Game1 : Game
 
         TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 5.0);
 
-        x += 20;
-        rec.X = x;
+        // Map Keys
+        
+        inputKey = Keyboard.GetState();
+
+        if(inputKey.IsKeyDown(Keys.W)  && inputKey.IsKeyUp(Keys.S))
+        {
+          currentDirection = Direction.Up;
+        }
+        if(inputKey.IsKeyDown(Keys.S) && inputKey.IsKeyUp(Keys.W))
+        {
+          currentDirection = Direction.Down;
+        }
+        if(inputKey.IsKeyDown(Keys.D) && inputKey.IsKeyUp(Keys.A))
+        {
+          currentDirection = Direction.Right;
+        }
+        if(inputKey.IsKeyDown(Keys.A) && inputKey.IsKeyUp(Keys.D))
+        {
+          currentDirection = Direction.Left;
+        }
+
+        if(currentDirection == Direction.Up)
+        {
+          y -= 20;
+          rec.Y = y;        
+        }
+        if(currentDirection == Direction.Down)
+        {
+              y += 20;
+              rec.Y = y;
+        }
+        if(currentDirection == Direction.Right)
+        {
+              x += 20;
+              rec.X = x;
+        }
+        if(currentDirection == Direction.Left)
+        {
+              x -= 20;
+              rec.X = x;
+        }
+       
         snake.Enqueue(rec);
         snake.Dequeue();
-
+        
         base.Update(gameTime);
     }
 
