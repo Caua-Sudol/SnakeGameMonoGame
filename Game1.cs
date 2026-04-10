@@ -1,4 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,8 +13,12 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Texture2D snake;
-    private Rectangle rec = new Rectangle(0, 0, 20, 20);
+    private Texture2D texture2D;
+    private Queue<Rectangle> snake = new Queue<Rectangle>();
+    private Rectangle tail;
+    private Rectangle rec;
+    private int x, y = 0;
+    private int width, height = 0;
 
     public Game1()
     {
@@ -29,9 +38,25 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        snake = new Texture2D(GraphicsDevice, 1, 1); 
-        Color[] color = new Color[] { Color.White };
-        snake.SetData(color);
+        texture2D = new Texture2D(GraphicsDevice, 1, 1); 
+        Color[] color = { Color.White };
+        texture2D.SetData(color);
+
+        width = 20;
+        height = 20;
+        rec = new Rectangle(x, y, width, height);
+        
+        for(int i = 0; i < 3; i++)
+        {
+            x += 20;
+            Console.WriteLine($"X: {x}");
+            rec.X = x;
+            Console.WriteLine(rec);
+            snake.Enqueue(rec);
+        }
+        
+        tail = snake.Peek();
+
     }
 
     protected override void Update(GameTime gameTime)
@@ -39,7 +64,12 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 5.0);
+
+        x += 20;
+        rec.X = x;
+        snake.Enqueue(rec);
+        snake.Dequeue();
 
         base.Update(gameTime);
     }
@@ -50,8 +80,11 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        _spriteBatch.Draw(snake, rec, Color.Green);
-        
+        foreach(var row in snake)
+        {
+            _spriteBatch.Draw(texture2D, row, Color.Green);
+        }
+    
         _spriteBatch.End();
 
         base.Draw(gameTime);
