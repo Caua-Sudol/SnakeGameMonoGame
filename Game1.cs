@@ -159,6 +159,14 @@ public class Game1 : Game
 
           rat.X = xR;
           rat.Y = yR;
+
+          x += 1;
+          y += 1;
+          head.X = x;
+          head.Y = y;
+
+          snake.Enqueue(head);
+
         }
         
 
