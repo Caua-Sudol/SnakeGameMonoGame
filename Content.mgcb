@@ -1,0 +1,13 @@
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin/Content
+/intermediateDir:obj/Content
+/platform:DesktopGL
+/profile:Reach
+/compress:False
+
+#---------------------------------- Content ---------------------------------#
+#begin Content/score.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Content/score.spritefont

@@ -21,6 +21,7 @@ public class Game1 : Game
     private string score;
     private int countScore = 0;
     private Vector2 scorePosition;
+    private SpriteFont font;
     
     private Rectangle tail;
     private Rectangle head;
@@ -78,6 +79,7 @@ public class Game1 : Game
 
         score = $"Pontuação: {countScore}";
         scorePosition = new Vector2(width/2, 1);
+        font = Content.Load<SpriteFont>("score");
 
         texture2D = new Texture2D(GraphicsDevice, 1, 1); 
         Color[] color = { Color.White };
@@ -199,7 +201,7 @@ public class Game1 : Game
         _spriteBatch.Begin();
 
         // Falta implementar o SpriteFont
-        _spriteBatch.DrawString(SpriteFont,score, scorePosition, Color.Black);
+        _spriteBatch.DrawString(font, score, scorePosition, Color.Black);
 
         foreach(var row in snake)
         {
