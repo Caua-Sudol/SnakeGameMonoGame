@@ -18,6 +18,9 @@ public class Game1 : Game
     private Queue<Rectangle> snake = new Queue<Rectangle>();
 
     private bool isDead = false;
+    private string score;
+    private int countScore = 0;
+    private Vector2 scorePosition;
     
     private Rectangle tail;
     private Rectangle head;
@@ -72,6 +75,9 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        score = $"Pontuação: {countScore}";
+        scorePosition = new Vector2(width/2, 1);
 
         texture2D = new Texture2D(GraphicsDevice, 1, 1); 
         Color[] color = { Color.White };
@@ -176,6 +182,8 @@ public class Game1 : Game
 
             rat.X = xR;
             rat.Y = yR;
+            
+            countScore += 1;
 
             snake.Enqueue(head);
           }
@@ -189,6 +197,9 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin();
+
+        // Falta implementar o SpriteFont
+        _spriteBatch.DrawString(SpriteFont,score, scorePosition, Color.Black);
 
         foreach(var row in snake)
         {
