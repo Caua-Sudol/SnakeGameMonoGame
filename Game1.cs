@@ -15,10 +15,24 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private Texture2D texture2D;
     private Queue<Rectangle> snake = new Queue<Rectangle>();
+    
     private Rectangle tail;
     private Rectangle rec;
+    private Rectangle rat;
+
+    private Random random = new Random();
+    private int xR, yR;
+
     private int x, y = 100;
-    private int width, height = 0;
+
+    private int width = 800;
+    private int height = 480;
+
+    private int widthSnake = 20;
+    private int heightSnake = 20;
+    private int widthRat = 10;
+    private int heightRat = 10;
+    
     private KeyboardState inputKey;
 
     public enum Direction
@@ -34,6 +48,10 @@ public class Game1 : Game
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
+
+        _graphics.PreferredBackBufferWidth = width;
+        _graphics.PreferredBackBufferHeight = height;
+
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -53,9 +71,11 @@ public class Game1 : Game
         Color[] color = { Color.White };
         texture2D.SetData(color);
 
-        width = 20;
-        height = 20;
-        rec = new Rectangle(x, y, width, height);
+        xR = random.Next(0, width);
+        yR = random.Next(0, height);
+
+        rec = new Rectangle(x, y, widthSnake, heightSnake);
+        rat = new Rectangle(xR, yR, widthRat, heightRat);
         
         for(int i = 0; i < 3; i++)
         {
@@ -79,22 +99,26 @@ public class Game1 : Game
         
         inputKey = Keyboard.GetState();
 
-        if(inputKey.IsKeyDown(Keys.W)  && inputKey.IsKeyUp(Keys.S))
+        if(inputKey.IsKeyDown(Keys.W)  && currentDirection != Direction.Down)
         {
           currentDirection = Direction.Up;
         }
-        if(inputKey.IsKeyDown(Keys.S) && inputKey.IsKeyUp(Keys.W))
+        if(inputKey.IsKeyDown(Keys.S) && currentDirection != Direction.Up)
         {
           currentDirection = Direction.Down;
         }
-        if(inputKey.IsKeyDown(Keys.D) && inputKey.IsKeyUp(Keys.A))
+        if(inputKey.IsKeyDown(Keys.D) && currentDirection != Direction.Left)
         {
           currentDirection = Direction.Right;
         }
-        if(inputKey.IsKeyDown(Keys.A) && inputKey.IsKeyUp(Keys.D))
+        if(inputKey.IsKeyDown(Keys.A) && currentDirection != Direction.Right)
         {
           currentDirection = Direction.Left;
         }
+
+        //
+        
+        // Atualização de movimento
 
         if(currentDirection == Direction.Up)
         {
@@ -116,6 +140,8 @@ public class Game1 : Game
               x -= 20;
               rec.X = x;
         }
+
+        //
        
         snake.Enqueue(rec);
         snake.Dequeue();
@@ -133,6 +159,8 @@ public class Game1 : Game
         {
             _spriteBatch.Draw(texture2D, row, Color.Green);
         }
+
+        _spriteBatch.Draw(texture2D, rat, Color.Gray);
     
         _spriteBatch.End();
 
