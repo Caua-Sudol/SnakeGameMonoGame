@@ -77,7 +77,7 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        score = $"Pontuação: {countScore}";
+        score = $"Pontuacao: {countScore}";
         scorePosition = new Vector2(width/2, 1);
         font = Content.Load<SpriteFont>("score");
 
@@ -200,7 +200,6 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        // Falta implementar o SpriteFont
         _spriteBatch.DrawString(font, score, scorePosition, Color.Black);
 
         foreach(var row in snake)
