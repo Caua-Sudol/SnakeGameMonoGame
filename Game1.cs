@@ -77,7 +77,6 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        score = $"Pontuacao: {countScore}";
         scorePosition = new Vector2(width/2, 1);
         font = Content.Load<SpriteFont>("score");
 
@@ -104,6 +103,8 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        score = $"Pontuacao: {countScore}";
+
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
