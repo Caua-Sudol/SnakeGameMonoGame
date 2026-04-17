@@ -15,6 +15,7 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Texture2D texture2D;
+    private Texture2D snakeTexture;
     private Queue<Rectangle> snake = new Queue<Rectangle>();
 
     private bool isDead = false;
@@ -35,8 +36,8 @@ public class Game1 : Game
     private int width = 800;
     private int height = 480;
 
-    private int widthSnake = 20;
-    private int heightSnake = 20;
+    private int widthSnake = 16;
+    private int heightSnake = 16;
     private int widthRat = 10;
     private int heightRat = 10;
 
@@ -84,6 +85,8 @@ public class Game1 : Game
         Color[] color = { Color.White };
         texture2D.SetData(color);
 
+        snakeTexture = Content.Load<Texture2D>("snake");
+
         xR = random.Next(0, width);
         yR = random.Next(0, height);
 
@@ -92,7 +95,7 @@ public class Game1 : Game
         
         for(int i = 0; i < 3; i++)
         {
-            x += 20;
+            x += 16;
             head.X = x;
             snake.Enqueue(head);
         }
@@ -103,7 +106,7 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
-        score = $"Pontuacao: {countScore}";
+        score = $"Score: {countScore}";
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
@@ -159,22 +162,22 @@ public class Game1 : Game
           // Atualização de movimento
           if(currentDirection == Direction.Up)
           {
-            y -= 20;
+            y -= 16;
             head.Y = y;        
           }
           if(currentDirection == Direction.Down)
           {
-            y += 20;
+            y += 16;
             head.Y = y;
           }
           if(currentDirection == Direction.Right)
           {
-            x += 20;
+            x += 16;
             head.X = x;
           }
           if(currentDirection == Direction.Left)
           {
-            x -= 20;
+            x -= 16;
             head.X = x;
           }
           // Fim da Atualização
@@ -205,7 +208,7 @@ public class Game1 : Game
 
         foreach(var row in snake)
         {
-            _spriteBatch.Draw(texture2D, row, Color.Green);
+            _spriteBatch.Draw(snakeTexture, row, Color.Green);
         }
 
         _spriteBatch.Draw(texture2D, rat, Color.Gray);

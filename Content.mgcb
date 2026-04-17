@@ -11,3 +11,9 @@
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /build:Content/score.spritefont
+
+#begin Content/snake.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyEnabled=false
+/build:Content/snake.png
