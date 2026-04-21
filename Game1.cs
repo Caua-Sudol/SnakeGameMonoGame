@@ -28,6 +28,12 @@ public class Game1 : Game
     private Rectangle head;
     private Rectangle rat;
 
+    private Rectangle snakeTail;
+    private Rectangle snakeHead;
+    private Rectangle snakeBody;
+
+    private List<(Rectangle Value, int Index)> snakeWithIdx;
+
     private Random random = new Random();
     private int xR, yR;
 
@@ -69,7 +75,9 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
+        snakeTail = new Rectangle(0, 0, 16, 16);
+        snakeHead = new Rectangle(32, 0, 16, 16);
+        snakeBody = new Rectangle(16, 0, 16, 16);
 
         base.Initialize();
     }
@@ -102,6 +110,7 @@ public class Game1 : Game
 
         tail = snake.Peek();
 
+        snakeWithIdx = snake.Select((rec, idx) => (Value: rec, Index: idx)).ToList(); 
     }
 
     protected override void Update(GameTime gameTime)
@@ -163,7 +172,7 @@ public class Game1 : Game
           if(currentDirection == Direction.Up)
           {
             y -= 16;
-            head.Y = y;        
+            head.Y = y;
           }
           if(currentDirection == Direction.Down)
           {
@@ -195,6 +204,8 @@ public class Game1 : Game
           }
         }
 
+        snakeWithIdx = snake.Select((rec, idx) => (value: rec, index: idx)).ToList();
+
         base.Update(gameTime);
     }
 
@@ -206,9 +217,20 @@ public class Game1 : Game
 
         _spriteBatch.DrawString(font, score, scorePosition, Color.Black);
 
-        foreach(var row in snake)
+        foreach(var row in snakeWithIdx)
         {
-            _spriteBatch.Draw(snakeTexture, row, Color.Green);
+          if(row.Index == 0)
+          {
+            _spriteBatch.Draw(snakeTexture, row.Value, snakeTail, Color.Green);
+          }
+          else if(row.Index == (snakeWithIdx.Count - 1))
+          {
+            _spriteBatch.Draw(snakeTexture, row.Value, snakeHead, Color.Green);
+          }
+          else
+          {
+            _spriteBatch.Draw(snakeTexture, row.Value, snakeBody, Color.Green);
+          }
         }
 
         _spriteBatch.Draw(texture2D, rat, Color.Gray);
