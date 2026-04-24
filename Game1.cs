@@ -16,9 +16,10 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private Texture2D texture2D;
     private Texture2D snakeTexture;
-    private Queue<Rectangle> snake = new Queue<Rectangle>();
+    private Queue<(Rectangle, Direction)> snake = new Queue<(Rectangle, Direction)>();
 
     private bool isDead = false;
+
     private string score;
     private int countScore = 0;
     private Vector2 scorePosition;
@@ -31,6 +32,8 @@ public class Game1 : Game
     private Rectangle snakeTail;
     private Rectangle snakeHead;
     private Rectangle snakeBody;
+    private Rectangle turnLeft;
+    private Rectangle turnRight;
 
     private List<(Rectangle Value, int Index)> snakeWithIdx;
 
@@ -78,6 +81,8 @@ public class Game1 : Game
         snakeTail = new Rectangle(0, 0, 16, 16);
         snakeHead = new Rectangle(32, 0, 16, 16);
         snakeBody = new Rectangle(16, 0, 16, 16);
+        turnLeft = new Rectangle(48, 0, 16, 16);
+        turnRight = new Rectangle(80, 0, 16, 16);
 
         base.Initialize();
     }
@@ -105,12 +110,10 @@ public class Game1 : Game
         {
             x += 16;
             head.X = x;
-            snake.Enqueue(head);
+            snake.Enqueue((head, currentDirection));
         }
-
-        tail = snake.Peek();
-
-        snakeWithIdx = snake.Select((rec, idx) => (Value: rec, Index: idx)).ToList(); 
+        var tuple = (rec, dir);
+        snakeWithIdx = snake.Select((tuple, idx) => (Value: tuple, Index: idx)).ToList(); 
     }
 
     protected override void Update(GameTime gameTime)
@@ -164,7 +167,7 @@ public class Game1 : Game
         countTime += gameTime.ElapsedGameTime.TotalMilliseconds;
         if(countTime >= fps)
         {
-          snake.Enqueue(head);
+          snake.Enqueue((head, currentDirection));
           snake.Dequeue();
           countTime = 0;
 
@@ -200,7 +203,7 @@ public class Game1 : Game
             
             countScore += 1;
 
-            snake.Enqueue(head);
+            snake.Enqueue((head, currentDirection));
           }
         }
 
