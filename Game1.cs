@@ -218,10 +218,10 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        //_spriteBatch.DrawString(font, score, scorePosition, Color.Black);
+        _spriteBatch.DrawString(font, score, scorePosition, Color.Black);
 
         foreach(var row in snakeWithIdx)
-        {
+        {                  
             if(row.index == 0)
             {
               _spriteBatch.Draw(snakeTexture, row.value, snakeTail, Color.Green);
@@ -232,21 +232,26 @@ public class Game1 : Game
             }
             else
             {
-              _spriteBatch.DrawString(font, $"Debug: {previous.Value.dir} || {row.dir}", scorePosition, Color.Black);
-              if(previous.Value.dir != row.dir)
+              if(previous != null)
               {
-                if(row.dir == Direction.Left)
+                if(previous.Value.dir != row.dir)
                 {
-                  _spriteBatch.Draw(snakeTexture, row.value, turnLeft, Color.Green);
+                  if(row.index == (snakeWithIdx.Count - 2))
+                  {
+                   if(row.dir == Direction.Left)
+                    {
+                      _spriteBatch.Draw(snakeTexture, row.value, turnLeft, Color.Green);
+                    }
+                    else if(row.dir == Direction.Right)
+                    {
+                      _spriteBatch.Draw(snakeTexture, row.value, turnRight, Color.Green);
+                    } 
+                  }
                 }
-                else if(row.dir == Direction.Right)
+                else
                 {
-                  _spriteBatch.Draw(snakeTexture, row.value, turnRight, Color.Green);
+                  _spriteBatch.Draw(snakeTexture, row.value, snakeBody, Color.Green);
                 }
-              }
-              else
-              {
-                _spriteBatch.Draw(snakeTexture, row.value, snakeBody, Color.Green);
               }
             }
           previous = row;
