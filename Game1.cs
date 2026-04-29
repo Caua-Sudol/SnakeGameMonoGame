@@ -35,6 +35,8 @@ public class Game1 : Game
     private Rectangle snakeBody;
     private Rectangle turnLeft;
     private Rectangle turnRight;
+    private Vector2 spriteOrig;
+    private float rotate90 = 1.57f; 
 
     private List<(Rectangle value, Direction dir, int index)> snakeWithIdx;
 
@@ -83,7 +85,9 @@ public class Game1 : Game
         snakeHead = new Rectangle(32, 0, 16, 16);
         snakeBody = new Rectangle(16, 0, 16, 16);
         turnLeft = new Rectangle(48, 0, 16, 16);
-        turnRight = new Rectangle(80, 0, 16, 16);
+        turnRight = new Rectangle(64, 0, 16, 16);
+
+        spriteOrig = new Vector2(8, 8);
 
         base.Initialize();
     }
@@ -224,11 +228,41 @@ public class Game1 : Game
         {                  
             if(row.index == 0)
             {
-              _spriteBatch.Draw(snakeTexture, row.value, snakeTail, Color.Green);
+              if(row.dir == Direction.Up)
+              {
+                _spriteBatch.Draw(snakeTexture, row.value, snakeTail, Color.Green, rotate90, spriteOrig, SpriteEffects.FlipHorizontally, 0);
+              }
+              else if(row.dir == Direction.Left)
+              {
+                _spriteBatch.Draw(snakeTexture, row.value, snakeTail, Color.Green, 0, spriteOrig, SpriteEffects.FlipHorizontally, 0);
+              }
+              else if(row.dir == Direction.Down)
+              {
+                _spriteBatch.Draw(snakeTexture, row.value, snakeTail, Color.Green, rotate90, spriteOrig, 0, 0);
+              }
+              else
+              {
+                _spriteBatch.Draw(snakeTexture, row.value, snakeTail, Color.Green, 0, spriteOrig, 0, 0);
+              }
             }
             else if(row.index == (snakeWithIdx.Count - 1))
             {
-              _spriteBatch.Draw(snakeTexture, row.value, snakeHead, Color.Green);
+              if(row.dir == Direction.Up)
+              {
+                _spriteBatch.Draw(snakeTexture, row.value, snakeHead, Color.Green, rotate90, spriteOrig, SpriteEffects.FlipHorizontally, 0);
+              }
+              else if(row.dir == Direction.Left)
+              {
+                _spriteBatch.Draw(snakeTexture, row.value, snakeHead, Color.Green, 0, spriteOrig, SpriteEffects.FlipHorizontally, 0);
+              }
+              else if(row.dir == Direction.Down)
+              {
+                _spriteBatch.Draw(snakeTexture, row.value, snakeHead, Color.Green, rotate90, spriteOrig, 0, 0);
+              }
+              else
+              {
+                _spriteBatch.Draw(snakeTexture, row.value, snakeHead, Color.Green, 0, spriteOrig, 0, 0);
+              }
             }
             else
             {
@@ -236,21 +270,57 @@ public class Game1 : Game
               {
                 if(previous.Value.dir != row.dir)
                 {
-                  if(row.index == (snakeWithIdx.Count - 2))
+                  if(previous.Value.dir == Direction.Right && row.dir == Direction.Up)
                   {
-                   if(row.dir == Direction.Left)
-                    {
-                      _spriteBatch.Draw(snakeTexture, row.value, turnLeft, Color.Green);
-                    }
-                    else if(row.dir == Direction.Right)
-                    {
-                      _spriteBatch.Draw(snakeTexture, row.value, turnRight, Color.Green);
-                    } 
+                    _spriteBatch.Draw(snakeTexture, row.value, turnRight, Color.Red, -rotate90, spriteOrig, 0, 0);
                   }
+                  else if (previous.Value.dir == Direction.Right && row.dir == Direction.Down)
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, turnLeft, Color.Red, -rotate90, spriteOrig, 0, 0);
+                  }
+                  else if(previous.Value.dir == Direction.Up && row.dir == Direction.Right)
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, turnRight, Color.Red, 0, spriteOrig, SpriteEffects.FlipVertically, 0);
+                  }
+                  else if(previous.Value.dir == Direction.Up && row.dir == Direction.Left)
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, turnLeft, Color.Red, 0, spriteOrig, SpriteEffects.FlipVertically, 0);
+                  }
+                  else if(previous.Value.dir == Direction.Left && row.dir == Direction.Up)
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, turnLeft, Color.Red, rotate90, spriteOrig, 0, 0);
+                  }
+                  else if(previous.Value.dir == Direction.Left && row.dir == Direction.Down)
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, turnRight, Color.Red, rotate90, spriteOrig, 0, 0);
+                  }                  
+                  else if(previous.Value.dir == Direction.Down && row.dir == Direction.Right)
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, turnRight, Color.Red, 0, spriteOrig, 0, 0);
+                  }
+                  else if(previous.Value.dir == Direction.Down && row.dir == Direction.Left)
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, turnLeft, Color.Red, 0, spriteOrig, 0, 0);
+                  }                  
                 }
                 else
                 {
-                  _spriteBatch.Draw(snakeTexture, row.value, snakeBody, Color.Green);
+                  if(row.dir == Direction.Up)
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, snakeBody, Color.Green, rotate90, spriteOrig, SpriteEffects.FlipVertically, 0);
+                  }
+                  else if(row.dir == Direction.Left)
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, snakeBody, Color.Green, 0, spriteOrig, SpriteEffects.FlipHorizontally, 0);
+                  }
+                  else if(row.dir == Direction.Down)
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, snakeBody, Color.Green, rotate90, spriteOrig, 0, 0);
+                  }
+                  else
+                  {
+                    _spriteBatch.Draw(snakeTexture, row.value, snakeBody, Color.Green, 0, spriteOrig, 0, 0);
+                  }
                 }
               }
             }
