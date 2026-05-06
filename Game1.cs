@@ -29,6 +29,14 @@ public class Game1 : Game
     private Rectangle head;
     private Rectangle rat;
 
+    private Texture2D ratTexture;
+
+    private List<Rectangle> rats;
+
+    private Rectangle ratSprOne;
+    private Rectangle ratSprTwo;
+    private Rectangle ratSprThree;
+
     private Rectangle snakeTail;
     private Rectangle snakeHead;
     private Rectangle snakeBody;
@@ -49,8 +57,8 @@ public class Game1 : Game
 
     private int widthSnake = 16;
     private int heightSnake = 16;
-    private int widthRat = 10;
-    private int heightRat = 10;
+    private int widthRat = 16;
+    private int heightRat = 16;
 
     private double countTime = 0;
     private double fps = 220;
@@ -86,6 +94,12 @@ public class Game1 : Game
         turnLeft = new Rectangle(48, 0, 16, 16);
         turnRight = new Rectangle(64, 0, 16, 16);
 
+        ratSprOne = new Rectangle(0, 0, 16, 16);
+        ratSprTwo = new Rectangle(16, 0, 16, 16);
+        ratSprThree = new Rectangle(32, 0, 16, 16);
+
+        rats = new List<Rectangle> {ratSprOne, ratSprTwo, ratSprThree};
+
         spriteOrig = new Vector2(8, 8);
 
         justAte = false;
@@ -105,6 +119,7 @@ public class Game1 : Game
         texture2D.SetData(color);
 
         snakeTexture = Content.Load<Texture2D>("snake");
+        ratTexture = Content.Load<Texture2D>("rat_animat");
 
         xR = random.Next(0, width);
         yR = random.Next(0, height);
@@ -294,7 +309,12 @@ public class Game1 : Game
             previous = row;
         }
 
-        _spriteBatch.Draw(texture2D, rat, Color.Gray);
+        Console.WriteLine($"Rats: {rats}");
+        foreach (var item in rats)
+        {
+            Console.WriteLine($"FOR Rats: {item}");
+            _spriteBatch.Draw(ratTexture, rat, item, Color.White, 0, spriteOrig, 0, 0);
+        }
     
         _spriteBatch.End();
 

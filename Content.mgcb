@@ -17,3 +17,9 @@
 /processor:TextureProcessor
 /processorParam:ColorKeyEnabled=false
 /build:Content/snake.png
+
+#begin Content/rat_animat.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyEnabled=false
+/build:Content/rat_animat.png
