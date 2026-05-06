@@ -309,10 +309,8 @@ public class Game1 : Game
             previous = row;
         }
 
-        Console.WriteLine($"Rats: {rats}");
         foreach (var item in rats)
         {
-            Console.WriteLine($"FOR Rats: {item}");
             _spriteBatch.Draw(ratTexture, rat, item, Color.White, 0, spriteOrig, 0, 0);
         }
     
