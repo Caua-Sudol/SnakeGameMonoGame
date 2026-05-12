@@ -196,29 +196,6 @@ public class Game1 : Game
           }
           justAte = false;       
           countTime = 0;
-
-          // Atualização de movimento
-          if(currentDirection == Direction.Up)
-          {
-            y -= 16;
-            head.Y = y;
-          }
-          if(currentDirection == Direction.Down)
-          {
-            y += 16;
-            head.Y = y;
-          }
-          if(currentDirection == Direction.Right)
-          {
-            x += 16;
-            head.X = x;
-          }
-          if(currentDirection == Direction.Left)
-          {
-            x -= 16;
-            head.X = x;
-          }
-          // Fim da Atualização
           if(head.Intersects(rat))
           {
             xR = random.Next(0, width);
