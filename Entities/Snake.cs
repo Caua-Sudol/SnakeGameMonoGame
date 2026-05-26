@@ -1,68 +1,93 @@
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Linq;
 using Microsoft.Xna.Framework;
-using SnakeGameMonoGame.InputSystem;
 
-namespace SnakeGameMonoGame.Snake;
+namespace SnakeGameMonoGame;
 
 public class Snake
 {
-    // # Direção pode ser do Render em vez de guardar a direção de cada segmento
-    // # Grow não precisa receber a posição se ele é naturamente um movimento sem Dequeue
-    // # Move precisa da posição? Se ela sabe onde está é só atualizar o x e y do head que já tem
+    private Queue<(Rectangle value, Direction dir)> snake;
 
-    private Queue<Vector2> Snk;
     public bool IsDead { get; private set; }
-    public Vector2 Head { get; private set; }
-    public Vector2 Segments { get; private set; } 
-    private Direction CurrentDirection;
-    private int CellSize;
-
-    private Dictionary<Direction, Vector2> DirectionVectors = new Dictionary<Direction, Vector2>()
+    public Rectangle Head { get; private set; }
+    public Direction CurrentDirection { get; private set; }
+    public IEnumerable<(Rectangle value, Direction dir)> Body
     {
-        {Direction.Up, new Vector2(0, -1)},
-        {Direction.Down, new Vector2(0, 1)},
-        {Direction.Right, new Vector2(1, 0)},
-        {Direction.Left, new Vector2(-1, 0)}
-    };
+        get { return snake; }
+    }
+
     public Snake()
     {
-        Snk = new Queue<Vector2>();
-
-        for(int i = 0; i <=3; i++)
-        {
-            Head += DirectionVectors[CurrentDirection] * CellSize;
-            Snk.Enqueue(Head);  
-        };
-
+        snake = new Queue<(Rectangle value, Direction dir)>();
         IsDead = false;
         CurrentDirection = Direction.Right;
-        Head = new Vector2(100, 100);
-        CellSize = 16;
+
+        int x = 0;
+        int y = 100;
+
+        Head = new Rectangle(x, y, GameSettings.SnakeWidth, GameSettings.SnakeHeight);
+
+        for (int i = 0; i < 3; i++)
+        {
+            x += GameSettings.CellSize;
+            Head = new Rectangle(x, y, GameSettings.SnakeWidth, GameSettings.SnakeHeight);
+            snake.Enqueue((Head, CurrentDirection));
+        }
+
+        x += GameSettings.CellSize;
+        Head = new Rectangle(x, y, GameSettings.SnakeWidth, GameSettings.SnakeHeight);
     }
 
-    public void Move()
+    public Rectangle GetNextHead()
     {
-        Head += DirectionVectors[CurrentDirection] * CellSize;
-        Snk.Enqueue(Head);
-    }
-    // Change vai ficar com as regras que impedem a virada de 180 graus
-    public void ChangeDirection(Direction direction){CurrentDirection = direction;}
-    public void Grow()
-    {
-        Head += DirectionVectors[CurrentDirection] * CellSize;
-        Snk.Enqueue(Head);
-        // if(head.Intersects(rat))
-        //   {
-        //     xR = random.Next(0, width);
-        //     yR = random.Next(0, height);
+        Rectangle nextHead = Head;
 
-        //     rat.X = xR;
-        //     rat.Y = yR;
-            
-        //     countScore += 1;
-        //     justAte = true;
-        //   }
+        if (CurrentDirection == Direction.Up)
+        {
+            nextHead.Y -= GameSettings.CellSize;
+        }
+        if (CurrentDirection == Direction.Down)
+        {
+            nextHead.Y += GameSettings.CellSize;
+        }
+        if (CurrentDirection == Direction.Left)
+        {
+            nextHead.X -= GameSettings.CellSize;
+        }
+        if (CurrentDirection == Direction.Right)
+        {
+            nextHead.X += GameSettings.CellSize;
+        }
+
+        return nextHead;
     }
-    public void Die(){IsDead = true;}
+
+    public void Move(bool grow)
+    {
+        Rectangle nextHead = GetNextHead();
+
+        snake.Enqueue((Head, CurrentDirection));
+
+        if (!grow)
+        {
+            snake.Dequeue();
+        }
+
+        Head = nextHead;
+    }
+
+    public void ChangeDirection(Direction direction)
+    {
+        CurrentDirection = direction;
+    }
+
+    public void Die()
+    {
+        IsDead = true;
+    }
+
+    public List<(Rectangle value, Direction dir, int index)> GetSnakeWithIdx()
+    {
+        return snake.Select((item, idx) => (value: item.value, dir: item.dir, index: idx)).ToList();
+    }
 }
